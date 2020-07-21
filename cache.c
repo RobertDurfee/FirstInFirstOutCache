@@ -15,9 +15,6 @@ void put(unsigned int t, unsigned int k, struct Value * v) {
         // get the head from the cache
         kv_ptr head = CACHE[k];
 
-        // make sure these are consecutive additions to the same cache entry
-        // assert(next_kv == (head + POOL[head].len) ? (head + POOL[head].len) % (POOL_SIZE + 1) : (head + POOL[head].len) % (POOL_SIZE + 1) + 1);
-
         // this cache entry is longer now
         POOL[head].len++;
 
