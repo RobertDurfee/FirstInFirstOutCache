@@ -30,7 +30,7 @@ extern kv_ptr next_kv;
 
 extern kv_ptr CACHE[CACHE_SIZE];
 
-void insert(unsigned int t, unsigned int k, struct Value * vs, unsigned int n);
+void put(unsigned int t, unsigned int k, struct Value * v);
 
 #define NONE 0
 

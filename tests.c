@@ -19,7 +19,9 @@ void reset(void) {
 
 void test_1(void) {
     struct Value vs[3] = { { 0x00 }, { 0x01 }, { 0x02 } };
-    insert(0xF0, 0x00, vs, 0x03);
+    for (unsigned int i = 0x00; i < 0x03; i++) {
+        put(0xF0, 0x00, &vs[i]);
+    }
     assert(next_kv == 0x04);
     kv_ptr kv = CACHE[0x00];
     assert(kv == 0x01);
@@ -41,7 +43,9 @@ void test_1(void) {
 
 void test_2(void) {
     struct Value vs1[8] = { { 0x00 }, { 0x01 }, { 0x02 }, { 0x03 }, { 0x04 }, { 0x05 }, { 0x06 }, { 0x07 } };
-    insert(0xF0, 0x00, vs1, 0x08);
+    for (unsigned int i = 0x00; i < 0x08; i++) {
+        put(0xF0, 0x00, &vs1[i]);
+    }
     assert(next_kv == 0x09);
     kv_ptr kv = CACHE[0x00];
     assert(kv == 0x01);
@@ -59,7 +63,9 @@ void test_2(void) {
         if (!kv) kv++;
     }
     struct Value vs2[7] = { { 0x08 }, { 0x09 }, { 0x0A }, { 0x0B }, { 0x0C }, { 0x0D }, { 0x0E } };
-    insert(0xF1, 0x01, vs2, 0x07);
+    for (unsigned int i = 0x00; i < 0x07; i++) {
+        put(0xF1, 0x01, &vs2[i]);
+    }
     assert(next_kv == 0x01);
     kv = CACHE[0x01];
     assert(kv == 0x09);
@@ -96,7 +102,9 @@ void test_2(void) {
 
 void test_3(void) {
     struct Value vs1[8] = { { 0x00 }, { 0x01 }, { 0x02 }, { 0x03 }, { 0x04 }, { 0x05 }, { 0x06 }, { 0x07 } };
-    insert(0xF0, 0x00, vs1, 0x08);
+    for (unsigned int i = 0x00; i < 0x08; i++) {
+        put(0xF0, 0x00, &vs1[i]);
+    }
     assert(next_kv == 0x09);
     kv_ptr kv = CACHE[0x00];
     assert(kv == 0x01);
@@ -114,7 +122,9 @@ void test_3(void) {
         if (!kv) kv++;
     }
     struct Value vs2[8] = { { 0x08 }, { 0x09 }, { 0x0A }, { 0x0B }, { 0x0C }, { 0x0D }, { 0x0E }, { 0x0F } };
-    insert(0xF1, 0x01, vs2, 0x08);
+    for (unsigned int i = 0x00; i < 0x08; i++) {
+        put(0xF1, 0x01, &vs2[i]);
+    }
     assert(next_kv == 0x02);
     kv = CACHE[0x01];
     assert(kv == 0x09);
@@ -138,7 +148,9 @@ void test_3(void) {
 
 void test_4(void) {
     struct Value vs1[7] = { { 0x00 }, { 0x01 }, { 0x02 }, { 0x03 }, { 0x04 }, { 0x05 }, { 0x06 } };
-    insert(0xF0, 0x00, vs1, 0x07);
+    for (unsigned int i = 0x00; i < 0x07; i++) {
+        put(0xF0, 0x00, &vs1[i]);
+    }
     assert(next_kv == 0x08);
     kv_ptr kv = CACHE[0x00];
     assert(kv == 0x01);
@@ -156,7 +168,9 @@ void test_4(void) {
         if (!kv) kv++;
     }
     struct Value vs2[7] = { { 0x07 }, { 0x08 }, { 0x09 }, { 0x0A }, { 0x0B }, { 0x0C }, { 0x0D } };
-    insert(0xE0, 0x00, vs2, 0x07);
+    for (unsigned int i = 0x00; i < 0x07; i++) {
+        put(0xE0, 0x00, &vs2[i]);
+    }
     assert(next_kv == 0x0F);
     kv = CACHE[0x00];
     assert(kv == 0x08);
@@ -174,7 +188,9 @@ void test_4(void) {
         if (!kv) kv++;
     }
     struct Value vs3[2] = { { 0x0E }, { 0x0F } };
-    insert(0xF1, 0x01, vs3, 0x02);
+    for (unsigned int i = 0x00; i < 0x02; i++) {
+        put(0xF1, 0x01, &vs3[i]);
+    }
     assert(next_kv == 0x02);
     kv = CACHE[0x01];
     assert(kv == 0x0F);
