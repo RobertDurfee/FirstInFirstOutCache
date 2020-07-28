@@ -1,60 +1,45 @@
-#include <stdio.h>
-#include <assert.h>
 #include <string.h>
 #include "cache.h"
 
-struct KV POOL[POOL_SIZE + 1];
-kv_ptr next_kv = 1;
-kv_ptr CACHE[CACHE_SIZE];
+node_t node_pool[NODE_POOL_SIZE + 1];
+node_ptr_t next_node_ptr = 1;
+node_ptr_t node_cache[NODE_CACHE_SIZE];
 
-void put(unsigned int t, unsigned int k, struct Value * v) {
-
+void put(key_t key, tag_t tag, value_t * value) {
     // if the cache has this key with a matching tag
-    if (CACHE[k] != NONE && POOL[CACHE[k]].tag == t) {
-
-        // get the head from the cache
-        kv_ptr head = CACHE[k];
-
+    if (node_cache[key] != 0 && node_pool[node_cache[key]].tag == tag) {
+        // get the first node from the cache
+        node_ptr_t first_node_ptr = node_cache[key];
         // this cache entry is longer now
-        POOL[head].len++;
-
-        // if kv about to be overwritten is valid ... 
-        if (POOL[next_kv].state == VALID) {
-
+        node_pool[first_node_ptr].len++;
+        // if node about to be overwritten is first ... 
+        if (node_pool[next_node_ptr].is_first) {
             // ... and in the cache, clear the cache entry
-            if (POOL[CACHE[POOL[next_kv].key]].tag == POOL[next_kv].tag) {
-                CACHE[POOL[next_kv].key] = NONE;
+            if (node_cache[node_pool[next_node_ptr].key] == next_node_ptr) {
+                node_cache[node_pool[next_node_ptr].key] = 0;
             }
-
-            // clear the state either way
-            POOL[next_kv].state = INVALID;
+            // unset as first either way
+            node_pool[next_node_ptr].is_first = false;
         }
-
         // copy the value
-        memcpy(&POOL[next_kv].value, v, sizeof(struct Value));
-
+        memcpy(&node_pool[next_node_ptr].value, value, sizeof(value_t));
     // otherwise this corresponds to an empty cache entry
     } else {
-
-        // if kv about to be overwritten is valid and in the cache, clear the cache entry
-        if (POOL[next_kv].state == VALID && POOL[CACHE[POOL[next_kv].key]].tag == POOL[next_kv].tag) {
-            CACHE[POOL[next_kv].key] = NONE;
+        // if node about to be overwritten is first and in the cache, clear the cache entry
+        if (node_pool[next_node_ptr].is_first && node_cache[node_pool[next_node_ptr].key] == next_node_ptr) {
+            node_cache[node_pool[next_node_ptr].key] = 0;
         }
-
         // set kv header information
-        POOL[next_kv].tag = t;
-        POOL[next_kv].key = k;
-        POOL[next_kv].state = VALID;
-        memcpy(&POOL[next_kv].value, v, sizeof(struct Value));
-        POOL[next_kv].len = 1;
-
+        node_pool[next_node_ptr].tag = tag;
+        node_pool[next_node_ptr].key = key;
+        node_pool[next_node_ptr].is_first = true;
+        memcpy(&node_pool[next_node_ptr].value, value, sizeof(value_t));
+        node_pool[next_node_ptr].len = 1;
         // insert into cache, don't care about overwrites (this is handled on insert)
-        CACHE[k] = next_kv;
+        node_cache[key] = next_node_ptr;
     }
-
     // get next kv from pool
-    next_kv = (next_kv + 1) % (POOL_SIZE + 1);
-
+    next_node_ptr = (next_node_ptr + 1) % (NODE_POOL_SIZE + 1);
     // zero is a reserved pointer
-    if (!next_kv) next_kv++;
+    if (!next_node_ptr) next_node_ptr++;
 }
